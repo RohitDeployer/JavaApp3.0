@@ -19,7 +19,7 @@ pipeline{
             steps{
             gitCheckout(
                 branch: "main",
-                url: "git@github.com:RohitDeployer/JavaAppProject.git"
+                url: "https://github.com/RohitDeployer/JavaApp3.0.git"
             )
             }
         }
