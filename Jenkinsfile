@@ -14,13 +14,13 @@ pipeline{
 
     stages{
          
-         stage('Git Checkout'){
+        stage('Git Checkout'){
                     when { expression {  params.action == 'create' } }
             steps{
             gitCheckout(
                 branch: "main",
                 url: "git@github.com:RohitDeployer/JavaAppProject.git"
-            )
+                ) 
             }
         }
         stage('Unit Test maven'){
@@ -28,10 +28,10 @@ pipeline{
          when { expression {  params.action == 'create' } }
 
             steps{
-               script{
-                   
+               script{  
+
                    mvnTest()
-               }
+                } 
             }
         }
         stage('Integration Test maven'){
@@ -77,7 +77,7 @@ pipeline{
             steps {
                 script {
                     def artifactoryConfig = [
-                        serverId: 'rtifactory', // Set this to the configured server ID in Jenkins
+                        serverId: 'artifactory', // Set this to the configured server ID in Jenkins
                         spec: """{
                             "files": [
                                 {
