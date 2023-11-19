@@ -73,6 +73,28 @@ pipeline{
                }
             }
         }
+        stage('JFrog Artifactory Upload'){
+            when { expression { params.action == 'create' } }
+            steps {
+                script {
+                    def artifactoryConfig = [
+                        serverId: 'Artifactory', // Set this to the configured server ID in Jenkins
+                        spec: """{
+                            "files": [
+                                {
+                                    "pattern": "target/*.jar",
+                                    "target": "${params.ImageName}/${params.ImageTag}/"
+                                }
+                            ]
+                        }""",
+                        buildName: "${params.ImageName}",
+                        buildNumber: "${params.ImageTag}"
+                    ]
+
+                    artifactoryUtils(artifactoryConfig)
+                }
+            }
+        }
         stage('Docker Image Build'){
          when { expression {  params.action == 'create' } }
             steps{
