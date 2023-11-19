@@ -14,16 +14,16 @@ pipeline{
 
     stages{
          
-        stage('Git Checkout'){
+         stage('Git Checkout'){
                     when { expression {  params.action == 'create' } }
             steps{
             gitCheckout(
                 branch: "main",
-                url: "https://github.com/RohitDeployer/JavaApp3.0.git"
+                url: "git@github.com:RohitDeployer/JavaAppProject.git"
             )
             }
         }
-        stage('Unit Test maven'){
+         stage('Unit Test maven'){
          
          when { expression {  params.action == 'create' } }
 
@@ -43,41 +43,25 @@ pipeline{
                }
             }
         }
-<<<<<<< HEAD
         stage('Static code analysis: Sonarqube'){
          when { expression {  params.action == 'create' } }
-=======
-         stage('Static code analysis: Sonarqube'){
-          when { expression {  params.action == 'create' } }
->>>>>>> 5c373790d6f15d80e4235493617931e86032af78
              steps{
                 script{
                    
                     def SonarQubecredentialsId = 'sonarqube-api'
                     statiCodeAnalysis(SonarQubecredentialsId)
                 }
-<<<<<<< HEAD
             }
         }
         stage('Quality Gate Status Check : Sonarqube'){
          when { expression {  params.action == 'create' } }
-=======
-             }
-        }
-        stage('Quality Gate Status Check : Sonarqube'){
-          when { expression {  params.action == 'create' } }
->>>>>>> 5c373790d6f15d80e4235493617931e86032af78
              steps{
                 script{
                    
                     def SonarQubecredentialsId = 'sonarqube-api'
                     QualityGateStatus(SonarQubecredentialsId)
                 }
-<<<<<<< HEAD
             }
-=======
-             }
->>>>>>> 5c373790d6f15d80e4235493617931e86032af78
         }
         stage('Maven Build : maven'){
          when { expression {  params.action == 'create' } }
@@ -93,7 +77,7 @@ pipeline{
             steps {
                 script {
                     def artifactoryConfig = [
-                        serverId: 'artifactory', // Set this to the configured server ID in Jenkins
+                        serverId: 'rtifactory', // Set this to the configured server ID in Jenkins
                         spec: """{
                             "files": [
                                 {
