@@ -19,11 +19,11 @@ pipeline{
             steps{
             gitCheckout(
                 branch: "main",
-                url: "https://github.com/RohitDeployer/JavaApp3.0.git"
+                url: "git@github.com:RohitDeployer/JavaAppProject.git"
             )
             }
         }
-         stage('Unit Test maven'){
+        stage('Unit Test maven'){
          
          when { expression {  params.action == 'create' } }
 
@@ -34,7 +34,7 @@ pipeline{
                }
             }
         }
-         stage('Integration Test maven'){
+        stage('Integration Test maven'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
@@ -43,25 +43,25 @@ pipeline{
                }
             }
         }
-         stage('Static code analysis: Sonarqube'){
-          when { expression {  params.action == 'create' } }
+        stage('Static code analysis: Sonarqube'){
+         when { expression {  params.action == 'create' } }
              steps{
                 script{
                    
                     def SonarQubecredentialsId = 'sonarqube-api'
                     statiCodeAnalysis(SonarQubecredentialsId)
                 }
-             }
+            }
         }
         stage('Quality Gate Status Check : Sonarqube'){
-          when { expression {  params.action == 'create' } }
+         when { expression {  params.action == 'create' } }
              steps{
                 script{
                    
                     def SonarQubecredentialsId = 'sonarqube-api'
                     QualityGateStatus(SonarQubecredentialsId)
                 }
-             }
+            }
         }
         stage('Maven Build : maven'){
          when { expression {  params.action == 'create' } }
@@ -70,6 +70,28 @@ pipeline{
                    
                    mvnBuild()
                }
+            }
+        }
+        stage('JFrog Artifactory Upload') {
+            when { expression { params.action == 'create' } }
+            steps {
+                script {
+                    def artifactoryConfig = [
+                        serverId: 'rtifactory', // Set this to the configured server ID in Jenkins
+                        spec: """{
+                            "files": [
+                                {
+                                    "pattern": "target/*.jar",
+                                    "target": "JavaAppArtifacts/${params.ImageName}/${params.ImageTag}/"
+                                }
+                            ]
+                        }""",
+                        buildName: "${params.ImageName}",
+                        buildNumber: "${params.ImageTag}"
+                    ]
+
+                    artifactoryUtils(artifactoryConfig)
+                }
             }
         }
         stage('Docker Image Build'){
@@ -81,7 +103,7 @@ pipeline{
                }
             }
         }
-         stage('Docker Image Scan: trivy '){
+        stage('Docker Image Scan: trivy '){
          when { expression {  params.action == 'create' } }
             steps{
                script{
