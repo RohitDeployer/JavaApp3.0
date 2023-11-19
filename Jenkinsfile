@@ -83,7 +83,7 @@ pipeline{
                             "files": [
                                 {
                                     "pattern": "target/*.jar",
-                                    "target": "${params.ImageName}/${params.ImageTag}/"
+                                    "target": "JavaAppArtifacts/${params.ImageName}/${params.ImageTag}/"
                                 }
                             ]
                         }""",
